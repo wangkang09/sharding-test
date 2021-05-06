@@ -1,0 +1,73 @@
+spring:
+  shardingsphere:
+    datasource:
+      names: db0,db1
+      common:
+        type: com.alibaba.druid.pool.DruidDataSource
+        username: root
+        password: root
+        initialSize: 5
+        minIdle: 5
+        maxActive: 500
+        maxWait: 60000
+        timeBetweenEvictionRunsMillis: 20000
+        minEvictableIdleTimeMillis: 200000
+        maxEvictableIdleTimeMillis: 200000
+      db0:
+        url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8&useSSL=false&zeroDateTimeBehavior=convertToNull&autoReconnect=true
+      db1:
+        url: jdbc:mysql://localhost:3306/encrypt?useUnicode=true&characterEncoding=UTF-8&useSSL=false&zeroDateTimeBehavior=convertToNull&autoReconnect=true
+    rules:
+      sharding:
+        # 没有 default db 了
+        tables:
+          rs_order:
+            actual-data-nodes: db0.rs_order_0,db0.rs_order_2,db1.rs_order_1,db1.rs_order_3
+        default-database-strategy:
+          complex:
+            sharding-columns: member_id,billno
+            sharding-algorithm-name: db-complex
+        default-table-strategy:
+          complex:
+            sharding-columns: member_id,billno
+            sharding-algorithm-name: table-complex
+        default-key-generate-strategy:
+          column: id
+          key-generator-name: rs-order-generator
+        #sharding 中的 key generator 配置
+        key-generators:
+          # rs-order-generator 为 generator 的名字。供上面的 key-generator-name 使用
+          rs-order-generator:
+            type: SNOWFLAKE
+            props:
+              worker-id: 1
+        sharding-algorithms:
+          table-complex:
+            type: tableComplex
+            props:
+              xx: xx # https://github.com/apache/shardingsphere/pull/8331
+          db-complex:
+            type: dbComplex
+            props:
+              xx: xx
+      encrypt:
+        tables:
+          rs_order:
+            columns:
+              email:
+                plain-column: email_plain
+                cipher-column: email
+                assisted-query-column: email_hash
+                encryptor-name: my-aes
+        encryptors:
+          my-aes:
+            type: my-AssistQuery
+            props:
+              business-key: 'privateDWK'
+#      shadow:
+#        column: shadow
+#        source-data-source-names: db0,db1
+#        shadow-data-source-names: db0-shadow,db1-shadow
+    props:
+      sql-show: true
+      query-with-cipher-column: true # 是否使用密文查询
