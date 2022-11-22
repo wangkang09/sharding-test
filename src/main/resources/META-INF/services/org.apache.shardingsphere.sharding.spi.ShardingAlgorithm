@@ -1,2 +1,4 @@
 com.example.shardingjdbctest.sharding.DbComplexAlgorithm
 com.example.shardingjdbctest.sharding.TableComplexAlgorithm
+com.example.shardingjdbctest.sharding.GtcDbComplexAlgorithm
+

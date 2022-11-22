@@ -23,10 +23,17 @@ spring:
         tables:
           rs_order:
             actual-data-nodes: db0.rs_order_0,db0.rs_order_2,db1.rs_order_1,db1.rs_order_3
+          global_tx_status:
+            actual-data-nodes: db0.global_tx_status,db1.global_tx_status
+            database-strategy:
+              complex:
+                sharding-columns: sharding_value
+                sharding-algorithm-name: gtc-db-complex
+        #database-strategy:
         default-database-strategy:
           complex:
             sharding-columns: member_id,billno
-            sharding-algorithm-name: db-complex
+            sharding-algorithm-name:
         default-table-strategy:
           complex:
             sharding-columns: member_id,billno
@@ -50,6 +57,10 @@ spring:
             type: dbComplex
             props:
               xx: xx
+          gtc-db-complex:
+            type: gtcDbComplex
+            props:
+              xx: xx
       encrypt:
         tables:
           rs_order:
@@ -64,10 +75,10 @@ spring:
             type: my-AssistQuery
             props:
               business-key: 'privateDWK'
-#      shadow:
-#        column: shadow
-#        source-data-source-names: db0,db1
-#        shadow-data-source-names: db0-shadow,db1-shadow
+    #      shadow:
+    #        column: shadow
+    #        source-data-source-names: db0,db1
+    #        shadow-data-source-names: db0-shadow,db1-shadow
     props:
       sql-show: true
       query-with-cipher-column: true # 是否使用密文查询

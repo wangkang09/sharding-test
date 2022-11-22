@@ -1,4 +1,34 @@
 spring:
   application:
     name: sharding-test
-
+# mybatis 框架配置
+mybatis:
+  configuration:
+    variables:
+      global-tx-status-table-name: global_tx_status
+global-tx:
+  system-name: gtc # 在分布式事务前端注册的系统名,即 cmdb 中的英文名
+  env-tag: dev # 开发环境配 dev；测试环境配 test；验收：sit；生产：prod
+shein:
+  signature:
+    sys-name: gtc-test-server
+    private-key: goceCMUhTP3z814i8eDvkzbs3BuGkD
+rpc:
+  depends:
+    RestyPassTcClient:
+      service: RestyPassTcClient
+      origin: http://shein-gateway-dev-dev.dev.paas-dev.sheincorp.cn/gtc
+    GtcTestClient:
+      origin: http://gtc-test-client-wk-master-dev.dev.paas-dev.sheincorp.cn
+debug: true
+logging:
+  level:
+    org.springframework.jdbc.datasource.init: trace
+    org.springframework.jdbc.support.JdbcTransactionManager: trace
+    sql: trace
+    org.springframework.transaction.interceptor.TransactionAspectSupport: trace
+    org.springframework.transaction.support.AbstractPlatformTransactionManager: trace
+    org.springframework.jdbc.datasource.DataSourceTransactionManager: trace
+    org.mybatis.spring.SqlSessionUtils: trace
+    org.springframework.jdbc.datasource.DataSourceUtils: trace
+    org.mybatis.spring: trace

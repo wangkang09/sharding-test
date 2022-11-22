@@ -20,7 +20,7 @@ public class DbComplexAlgorithm implements ComplexKeysShardingAlgorithm<Comparab
 
     @Override
     public void init() {
-
+        System.out.println(1);
     }
 
     /**
@@ -50,6 +50,6 @@ public class DbComplexAlgorithm implements ComplexKeysShardingAlgorithm<Comparab
      */
     @Override
     public void setProps(Properties props) {
-
+        System.out.println(1);
     }
 }
