@@ -94,4 +94,16 @@ public class OrderController {
         GlobalTxSpringContextHolder.flushGlobalTxStatus();
         return Response.buildSuccessInfo("gtcTest");
     }
+
+    @GetMapping("/successTestNoSharding")
+    @GlobalTxStart(business = "gtc-test-success")
+    @Transactional
+    public Response<String> gtcTestNoSharding(String name, long memberId) {
+        if (StringUtils.isBlank(name)) {
+            name = "null";
+        }
+        orderMapper.insert(memberId, "1", name);
+        gtcTestClient.gtcTest(name);
+        return Response.buildSuccessInfo("gtcTest");
+    }
 }
